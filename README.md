@@ -18,7 +18,7 @@ You can make use of [dynamic imports](https://v8.dev/features/dynamic-import) if
 
 ```javascript
 import { LitElement, html } from 'lit-element';
-import { Router } from 'wc-router';
+import { Router } from 'simple-wc-router';
 
 class App extends Router(LitElement) {
     get routes() {
@@ -51,7 +51,7 @@ The RouteMixin class should be used for those components that trigger navigation
 
 ```javascript
 import { LitElement, html } from 'lit-element';
-import { RouteMixin } from 'wc-router'; 
+import { RouteMixin } from 'simple-wc-router'; 
 
 class Button extends RouteMixin(LitElement) {
     static get properties() {
