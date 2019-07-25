@@ -1,4 +1,4 @@
-# Web Component Router
+# Simple Web Component Router
 
 This is basic web component router that hooks into both the history API and the web components spec.
 You can use this to setup routing for your web components application. The router supports lazy loading

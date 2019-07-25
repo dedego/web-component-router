@@ -1,7 +1,7 @@
 {
-  "name": "web-component-router",
+  "name": "simple-wc-router",
   "version": "1.0.0",
-  "description": "Web Component Router",
+  "description": "`Simple Web Component Router",
   "main": "dist/index.js",
   "module": "dist/index.m.js",
   "scripts": {
