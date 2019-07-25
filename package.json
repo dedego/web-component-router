@@ -1,0 +1,33 @@
+{
+  "name": "web-component-router",
+  "version": "1.0.0",
+  "description": "Web Component Router",
+  "main": "dist/index.js",
+  "module": "dist/index.m.js",
+  "scripts": {
+    "build": "rimraf dist && rollup -c",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": "github:dedego/web-component-router",
+  "keywords": [
+    "web components",
+    "router"
+  ],
+  "author": "Dennis de Goede",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dedego/web-component-router/issues"
+  },
+  "homepage": "https://github.com/dedego/web-component-router#readme",
+  "devDependencies": {
+    "@babel/plugin-syntax-import-meta": "^7.2.0",
+    "rimraf": "^2.6.3",
+    "rollup": "^1.17.0",
+    "rollup-plugin-terser": "^5.1.1"
+  },
+  "babel": {
+    "plugins": [
+      "@babel/plugin-syntax-import-meta"
+    ]
+  }
+}
