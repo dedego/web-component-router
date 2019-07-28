@@ -1,56 +1,87 @@
 # Simple Web Component Router
 
-This is basic web component router that hooks into both the history API and the web components spec.
-You can use this to setup routing for your web components application. The router supports lazy loading
-for javascript modules (ESM).
+This is basic web component router that hooks into both the history API and the web components spec. You can use this to setup routing for your web components application. The router supports lazy loading for javascript modules (ESM).
 
-- [*class* Router](#Router)
-- [*class* RouteMixin](#RouteMixin)
+To make sure the routing works as intended, please add a base tag to your root HTML page, like so:
+```html
+<base href="/">
+```
+The base href itself does not have to be `/`.
+
+- [*class* Router](#router)
+- [*class* RouteMixin](#routemixin)
+
+---
 
 ## Router
 
-The Router is a class mixin which you can use to extend your webcomponent. The following example will show you how to use it:
+The Router is a class mixin which you can use to extend your webcomponent. The following example will show you how to use it.
 
+### Exampe with Lit Element
 
-### In Lit Element
+You can make use of [dynamic imports](https://v8.dev/features/dynamic-import) if your build tooling supports it. If not make sure the components have been (imported and) defined. The imported component will be passed a `routeProps` object containing (in this case) a property `type` and `day` for the page-stocks component. 
 
-You can make use of [dynamic imports](https://v8.dev/features/dynamic-import) if your build tooling supports it. Otherwise make sure the components have been (imported and) defined.
-
+**app.js**
 ```javascript
 import { LitElement, html } from 'lit-element';
 import { Router } from 'simple-wc-router';
+import './pages/page_home';
+import './components';
 
 class App extends Router(LitElement) {
     get routes() {
         return [
             {
                 path: "/",
-                component: "page-home",
-                import: () => import("./src/page_home.js")
+                component: "page-home"
             },
             {
                 path: "/stock/:type/:day",
                 component: "page-stocks",
-                import: () => import("./src/page_home.js")
+                import: () => import("./src/page_stock.js")
             }
         ];
     }
     render() {
         return html`
-            Route:
-            ${this.routeElement}
+            <app-header>
+                <h1 slot="left">... some title goes here ...</h1>
+                <nav slot="right">... some navigation goes here ...</nav>
+            </app-header>
+            <main>
+                ${this.routeElement}
+            </main>
+            <app-footer>
+                ... some copyright goes here ...
+            </app-footer>
         `
     }
 }
 customElements.define('my-app', App);
 ```
 
-## RouteMixin
-
-The RouteMixin class should be used for those components that trigger navigation. The `navigate` method is added to the class, which only requires you to set a `route` property. The mixin also provides you a boolean that tells you if the given route is active (`isRouteActive`) which you can utilize for e.g. styles.
-
+**page_stocks.js**
 ```javascript
 import { LitElement, html } from 'lit-element';
+
+class Stocks extends LitElement {
+    render() {
+        // If provided, the properties for type and day are taking from the path.
+        const { type = 'NASDAC', day = 'monday' } = this.routeProps;
+        return html`This is the page for ${type} on a ${day}`
+    }
+}
+customElements.define('page-stocks', Stocks);
+```
+
+---
+
+## RouteMixin
+
+The RouteMixin class should be used for those components that trigger navigation. The `navigate` method is added to the class, which only requires you to set a `route` property. The `navigate` method can also be called with a route. The mixin also provides you a boolean that tells you if the given route is active (`isRouteActive`) which you can utilize for e.g. styles.
+
+```javascript
+import { LitElement, html, css } from 'lit-element';
 import { RouteMixin } from 'simple-wc-router'; 
 
 class Button extends RouteMixin(LitElement) {
@@ -68,7 +99,8 @@ class Button extends RouteMixin(LitElement) {
         `;
     }
     handleClick() {
-        if (!this.disabled) this.navigate();
+        if (this.disabled) this.navigate('/button-was-disabled-why-did-you-click-it');
+        this.navigate();
     }
     render() {
         const activeClass = this.isRouteActive ? 'active' : '';

@@ -100,8 +100,8 @@ const RouteMixin = superClass =>
     __handleActive(ev) {
       this.isRouteActive = ev.state.route === this.route;
     }
-    navigate() {
-      const { route } = this;
+    navigate( customRoute ) {
+      const route = customRoute ? customRoute : this.route;
       if (!route) throw Errors.RouteMixin.NoRoute.replace('###', this.nodeName);
       if (route === window.location.pathname) return;
       if (route.substring(0, 1) !== '/') {
