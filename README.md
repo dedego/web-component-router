@@ -21,6 +21,8 @@ The Router is a class mixin which you can use to extend your webcomponent. The f
 
 You can make use of [dynamic imports](https://v8.dev/features/dynamic-import) if your build tooling supports it. If not make sure the components have been (imported and) defined. The imported component will be passed a `routeProps` object containing (in this case) a property `type` and `day` for the page-stocks component. 
 
+> As of version 1.2.0 the routes need to be defined as `static get routes()`.
+
 **app.js**
 ```javascript
 import { LitElement, html } from 'lit-element';
@@ -29,7 +31,7 @@ import './pages/page_home';
 import './components';
 
 class App extends Router(LitElement) {
-    get routes() {
+    static get routes() {
         return [
             {
                 path: "/",
@@ -123,3 +125,14 @@ Now when you want to use the component, it is as simple as:
 ```html
 <w-button route="/foo/bar">The only bar in town... FooBar</w-button>
 ```
+
+## Changelog
+
+| Version | Changes                                                                          |
+| ------- | -------------------------------------------------------------------------------- |
+| 1.0.0   | Initial version of simple web component router                                   |
+| 1.0.1   | Small bugfix                                                                     |
+| 1.0.2   | Another small bugfix                                                             |
+| 1.1.0   | Changed the routing setup                                                        |
+| 2.0.0   | Changed route matching, routes must be defined as static. Also created example to play around.                          |
+

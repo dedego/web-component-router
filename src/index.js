@@ -1,3 +1,5 @@
+import { matcher } from './matcher';
+
 const DCE = document.createElement.bind(document);
 const HPS = history.pushState.bind(history);
 const HRS = history.replaceState.bind(history);
@@ -45,22 +47,13 @@ const Router = superClass =>
       WRE("popstate", this.__handleNav.bind(this));
     }
     __handleNav(ev) {
-      if (!this.routes) throw Errors.Router.NoRoutes;
+      if (!this.constructor.routes) throw Errors.Router.NoRoutes;
       const targetRoute = ev.state.route;
-      const targetParts = targetRoute.split("/");
-      this.routeProps = {};
-      this.route = this.routes.find(({ path }) => {
-        const matches = [];
-        path.split("/").forEach((part, i) => {
-          if (part.includes(":")) {
-            this.routeProps[part.replace(":", "")] = targetParts[i];
-            matches.push(true);
-          } else {
-            matches.push(part === targetParts[i]);
-          }
-        });
-        return !matches.some(match => !match);
-      });
+      const match = matcher(this.constructor.routes, targetRoute);
+      if (match) {
+        this.route = match.route;
+        this.routeProps = match.props;
+      }
       if (this.lastRoute !== targetRoute) {
         this.setRouteElement();
         this.lastRoute = targetRoute;
