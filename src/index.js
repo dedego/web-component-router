@@ -15,6 +15,8 @@ const Errors = {
   }
 };
 
+const startLocation = () => window.location.pathname || "/";
+
 const Router = superClass =>
   class extends superClass {
     static get properties() {
@@ -28,15 +30,15 @@ const Router = superClass =>
     }
     constructor() {
       super();
-      this.route = window.location.pathname || "/";
+      const route = startLocation();
       this.routeProps = {};
       this.lastRoute = null;
-      HRS({ route: this.route }, null, this.route);
+      HRS({ route }, null, route);
     }
     connectedCallback() {
       super.connectedCallback();
       WAE("popstate", this.__handleNav.bind(this));
-      WDE(new PopStateEvent("popstate", { state: { route: this.route } }));
+      WDE(new PopStateEvent("popstate", { state: { route: startLocation() } }));
     }
     disconnectedCallback() {
       super.disconnectedCallback();
@@ -70,7 +72,9 @@ const Router = superClass =>
         Object.assign(element, this.routeProps);
         this.routeElement = element;
       };
-      if (
+      if (!this.route) {
+        this.routeElement = null;
+      } else if (
         !customElements.get(this.route.component) &&
         typeof this.route.import === "function"
       ) {

@@ -42,6 +42,9 @@ class App extends Router(LitElement) {
             }
         ];
     }
+    render404() {
+        return html`<h2>404 The requested page could not be found</h2>`;
+    }
     render() {
         return html`
             <app-header>
@@ -49,7 +52,7 @@ class App extends Router(LitElement) {
                 <nav slot="right">... some navigation goes here ...</nav>
             </app-header>
             <main>
-                ${this.routeElement}
+                ${this.routeElement ? this.routeElement : this.render404()}
             </main>
             <app-footer>
                 ... some copyright goes here ...
