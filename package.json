@@ -1,6 +1,6 @@
 {
   "name": "simple-wc-router",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "`Simple Web Component Router",
   "main": "dist/index.js",
   "module": "dist/index.m.js",
@@ -22,14 +22,14 @@
   },
   "homepage": "https://github.com/dedego/web-component-router#readme",
   "devDependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
-    "babel-jest": "^24.8.0",
-    "es-dev-server": "^1.10.3",
-    "jest": "^24.8.0",
+    "@babel/core": "^7.6.2",
+    "@babel/preset-env": "^7.6.2",
+    "babel-jest": "^24.9.0",
+    "es-dev-server": "^1.18.3",
+    "jest": "^24.9.0",
     "lit-element": "^2.2.1",
-    "rollup": "^1.17.0",
-    "rollup-plugin-terser": "^5.1.1"
+    "rollup": "^1.23.1",
+    "rollup-plugin-terser": "^5.1.2"
   },
   "browserslist": [
     "defaults"

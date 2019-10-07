@@ -61,8 +61,14 @@ const Router = superClass =>
     }
     setRouteElement() {
       const setElement = () => {
-        const element = DCE(this.route.component);
-        Object.assign(element, this.routeProps);
+        let element;
+        if( typeof this.route.render === "function" ) {
+          element = this.route.render(this.routeProps);
+        } else {
+          element = DCE(this.route.component);
+          Object.assign(element, this.routeProps);
+        }
+        
         this.routeElement = element;
       };
       if (!this.route) {

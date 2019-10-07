@@ -22,6 +22,7 @@ The Router is a class mixin which you can use to extend your webcomponent. The f
 You can make use of [dynamic imports](https://v8.dev/features/dynamic-import) if your build tooling supports it. If not make sure the components have been (imported and) defined. The imported component will be passed a `routeProps` object containing (in this case) a property `type` and `day` for the page-stocks component. 
 
 > As of version 1.2.0 the routes need to be defined as `static get routes()`.
+> As of version 2.1.0 a render method is added to the route definitions`.
 
 **app.js**
 ```javascript
@@ -29,6 +30,8 @@ import { LitElement, html } from 'lit-element';
 import { Router } from 'simple-wc-router';
 import './pages/page_home';
 import './components';
+
+const globalProp = "version-1.2.3";
 
 class App extends Router(LitElement) {
     static get routes() {
@@ -41,7 +44,13 @@ class App extends Router(LitElement) {
                 path: "/stock/:type/:day",
                 component: "page-stocks",
                 import: () => import("./src/page_stock.js")
+            },
+            {
+                path: "/news/:category",
+                render: routeProps => html`<page-news .category=${routeProps.category} .someOtherGlobalProp=${globalProp}></page-news>`,
+                import: () => import("./src/page_news.js")
             }
+
         ];
     }
     render404() {
@@ -135,4 +144,5 @@ Now when you want to use the component, it is as simple as:
 | 1.0.2   | Another small bugfix                                                             |
 | 1.1.0   | Changed the routing setup                                                        |
 | 2.0.0   | Changed route matching, routes must be defined as static. Also created example to play around.                          |
+| 2.1.0   | Added a render method to the route definition.                                   |
 

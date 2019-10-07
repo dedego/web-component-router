@@ -2,18 +2,25 @@ import { LitElement, html } from 'lit-element';
 import { Router } from './src';
 
 class A extends LitElement {
-    render() { return html`<a href="/b">A</a>` }
+    static get properties() { return { data: String }}
+    render() { return html`<a href="/b">A ${this.data}</a>` }
 }
 customElements.define('web-a', A);
+
 class B extends LitElement {
-    render() { return html`<a href="/">B</a>` }
+    render() { return html`<a href="/"> B</a>` }
 }
 customElements.define('web-b', B);
 
 class WebApp extends Router(LitElement) {
     static get routes() {
         return [
-            { path: '/', component: 'web-a' },
+            { 
+                path: '/foo/:pathvar', 
+                render: props => html`
+                    <web-a .data=${props.pathvar}></web-a>
+                `
+            },
             { path: '/b', component: 'web-b' }
         ]
     }
