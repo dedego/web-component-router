@@ -21,7 +21,10 @@ The Router is a class mixin which you can use to extend your webcomponent. The f
 
 You can make use of [dynamic imports](https://v8.dev/features/dynamic-import) if your build tooling supports it. If not make sure the components have been (imported and) defined. The imported component will be passed a `routeProps` object containing (in this case) a property `type` and `day` for the page-stocks component. 
 
+Wilcard/Fallback/Default routes can be added as `path: "*"`, which can be used with either `render` or `component` (with or without import).
+
 > As of version 1.2.0 the routes need to be defined as `static get routes()`.
+
 > As of version 2.1.0 a render method is added to the route definitions`.
 
 **app.js**
@@ -49,12 +52,12 @@ class App extends Router(LitElement) {
                 path: "/news/:category",
                 render: routeProps => html`<page-news .category=${routeProps.category} .someOtherGlobalProp=${globalProp}></page-news>`,
                 import: () => import("./src/page_news.js")
+            },
+            {
+                path: "*",
+                render: () => html`<h2>404 The requested page could not be found</h2>`
             }
-
         ];
-    }
-    render404() {
-        return html`<h2>404 The requested page could not be found</h2>`;
     }
     render() {
         return html`
@@ -63,7 +66,7 @@ class App extends Router(LitElement) {
                 <nav slot="right">... some navigation goes here ...</nav>
             </app-header>
             <main>
-                ${this.routeElement ? this.routeElement : this.render404()}
+                ${this.routeElement}
             </main>
             <app-footer>
                 ... some copyright goes here ...
@@ -145,4 +148,5 @@ Now when you want to use the component, it is as simple as:
 | 1.1.0   | Changed the routing setup                                                        |
 | 2.0.0   | Changed route matching, routes must be defined as static. Also created example to play around.                          |
 | 2.1.0   | Added a render method to the route definition.                                   |
+| 2.2.0   | Added wildcard posibility.                                                       |
 

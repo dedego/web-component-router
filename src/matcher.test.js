@@ -8,18 +8,20 @@ describe("Matcher evaluation", () => {
         { path: '/info/:type/search', id: 1 },
         { path: '/info/foo/search', id: 2 },
         { path: '/:some/:properties', id: 3 },
-        { path: '/other/:properties', id: 4 }
+        { path: '/other/:properties', id: 4 },
+        { path: '*', id: 99 }
     ];
   });
 
   test("Matching", () => {
     expect(matcher(patterns, '/info').route.id).toBe(0);
-    expect(matcher(patterns, '/info/foo')).toBe(null);   
+    expect(matcher(patterns, '/info/foo').route.id).toBe(99);   
   });
 
   test("Top level", () => {
     // Top level routes cannot be dynamic
-    expect(matcher(patterns, '/some/props')).toBe(null);
+    // Wildcard is applied when no routes are matched
+    expect(matcher(patterns, '/some/props').route.id).toBe(99);
     expect(matcher(patterns, '/other/url').props.properties).toBe('url');
   })
 

@@ -6,6 +6,7 @@ const split = str => {
 
 const matcher = (patterns, targetRoute) => {
   const exactMatch = patterns.find(({ path }) => path === targetRoute);
+  const wildcard = patterns.find(pattern => pattern.path === '*');
   if (exactMatch) return { route: exactMatch, props: null };
   const targetParts = split(targetRoute);
   const props = {};
@@ -24,7 +25,8 @@ const matcher = (patterns, targetRoute) => {
     return matches.every(match => match === true);
   });
 
-  if(!route) return null;
+  if(!route && wildcard) return { route: wildcard };
+  if(!route && !wildcard) return null;
   return { route, props };
 };
 
