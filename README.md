@@ -1,19 +1,50 @@
+# Simple Web Component Router
 ![alt text](simple-wc-router.png "Simple <Web Component /> Router")
 
-This is basic web component router that hooks into both the history API and the web components spec. You can use this to setup routing for your web components application. The router supports lazy loading for javascript modules (ESM).
+This is a *simple web component router* that hooks into both the history API and the web components API. You can use this to setup routing for your web components application.
+
+**Features:**
+
+- Dynamic imports (Lazy loading for javascript modules)
+- Simple setup
+- Flexibility using either the `render` method or a `component` name for rendering a route  
+
+**Documentation:**
+- [Getting Started](#getting-started)
+- [Router](#router)
+- [RouteMixin](#routemixin)
+
+---
+
+## Getting started
+
+**Installation**
+```javascript
+npm install simple-wc-router --save
+```
+
+```javascript
+yarn add simple-wc-router
+```
+
+**Usage**
+
+You can import the Router and/or RouteMixin from the package and use it to extends the web component class
+```javascript
+import { Router, RouteMixin } from 'simple-wc-router';
+
+class SomeComponent extends Router(SomeWebComponentLibrary) {
+```
+
+---
+
+## Router
 
 To make sure the routing works as intended, please add a base tag to your root HTML page, like so:
 ```html
 <base href="/">
 ```
 The base href itself does not have to be `/`.
-
-- [*class* Router](#router)
-- [*class* RouteMixin](#routemixin)
-
----
-
-## Router
 
 The Router is a class mixin which you can use to extend your webcomponent. The following example will show you how to use it.
 
@@ -50,7 +81,11 @@ class App extends Router(LitElement) {
             },
             {
                 path: "/news/:category",
-                render: routeProps => html`<page-news .category=${routeProps.category} .someOtherGlobalProp=${globalProp}></page-news>`,
+                render: routeProps => html`
+                    <page-news 
+                        .category=${routeProps.category} 
+                        .someOtherGlobalProp=${globalProp}>
+                    </page-news>`,
                 import: () => import("./src/page_news.js")
             },
             {
@@ -149,4 +184,5 @@ Now when you want to use the component, it is as simple as:
 | 2.0.0   | Changed route matching, routes must be defined as static. Also created example to play around.                          |
 | 2.1.0   | Added a render method to the route definition.                                   |
 | 2.2.0   | Added wildcard posibility.                                                       |
+| 2.2.1   | Changed the documentation.                                                       |
 
