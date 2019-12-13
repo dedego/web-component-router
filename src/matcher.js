@@ -1,7 +1,7 @@
 const split = str => {
-    if (!str.includes("/")) return str;
-    if (str.charAt(0) === "/") return str.substring(1).split("/");
-    return str.split("/");
+  if (!str.includes("/")) return str;
+  if (str.charAt(0) === "/") return str.substring(1).split("/");
+  return str.split("/");
 }
 
 const matcher = (patterns, targetRoute) => {
@@ -12,17 +12,36 @@ const matcher = (patterns, targetRoute) => {
   const props = {};
   const route = patterns.find(({ path }) => {
     const patternParts = split(path);
-    if( (patternParts.length !== targetParts.length) || patternParts[0].includes(":") ) return false;
-    const matches = [];    
-    patternParts.forEach((part, i) => {
-        if (patternParts[i] && patternParts[i].includes(":")) {
-            props[patternParts[i].replace(":", "")] = targetParts[i];
-            matches.push(true);
-        } else {
-            matches.push(part === targetParts[i]);
-        }
+
+    if (!Array.isArray(patternParts)) {
+      // patternParts is wildcard character
+      return false;
+    }
+
+    if (patternParts[0].includes(":")) {
+      // not allowed
+      return false;
+    }
+
+    const requiredPartsLen = patternParts.filter(part => !part.includes(':?')).length;
+    const fullPartsLen = patternParts.length;
+    const targetPartsLen = targetParts.length;
+
+    if (targetPartsLen < requiredPartsLen || targetPartsLen > fullPartsLen) {
+      return false;
+    }
+
+    return patternParts.every((part, i) => {
+      if (patternParts[i].includes(':?')) {
+        props[patternParts[i].replace(':?', '')] = targetParts[i];
+        return true;
+      }
+      if (patternParts[i].includes(':')) {
+        props[patternParts[i].replace(':', '')] = targetParts[i];
+        return true;
+      }
+      return part === targetParts[i];
     });
-    return matches.every(match => match === true);
   });
 
   if(!route && wildcard) return { route: wildcard };

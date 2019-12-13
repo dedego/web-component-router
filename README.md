@@ -185,4 +185,4 @@ Now when you want to use the component, it is as simple as:
 | 2.1.0   | Added a render method to the route definition.                                   |
 | 2.2.0   | Added wildcard posibility.                                                       |
 | 2.2.1   | Changed the documentation.                                                       |
-
+| 2.3.0   | Added support for optional path parts.                                           |

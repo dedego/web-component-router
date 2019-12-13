@@ -9,6 +9,7 @@ describe("Matcher evaluation", () => {
         { path: '/info/foo/search', id: 2 },
         { path: '/:some/:properties', id: 3 },
         { path: '/other/:properties', id: 4 },
+        { path: '/optional/:id/:?name', id: 5 },
         { path: '*', id: 99 }
     ];
   });
@@ -30,5 +31,10 @@ describe("Matcher evaluation", () => {
     expect(matcher(patterns, '/info/foo/search').route.id).toBe(2);
     // This is dynamically matched
     expect(matcher(patterns, '/info/bar/search').route.id).toBe(1);
+  })
+  
+  test("Optional params", () => {
+    expect(matcher(patterns, '/optional/123').route.id).toBe(5);
+    expect(matcher(patterns, '/optional/123/loading').route.id).toBe(5);
   })
 });
