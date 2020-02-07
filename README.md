@@ -50,13 +50,20 @@ The Router is a class mixin which you can use to extend your webcomponent. The f
 
 ### Exampe with Lit Element
 
-You can make use of [dynamic imports](https://v8.dev/features/dynamic-import) if your build tooling supports it. If not make sure the components have been (imported and) defined. The imported component will be passed a `routeProps` object containing (in this case) a property `type` and `day` for the page-stocks component. 
+> As of version 2.1.0 a render method is added to the route definitions.
 
-Wilcard/Fallback/Default routes can be added as `path: "*"`, which can be used with either `render` or `component` (with or without import).
+> As of version 2.3.0 you can have optional path parts.
 
-> As of version 2.1.0 a render method is added to the route definitions`.
+You can make use of [dynamic imports](https://v8.dev/features/dynamic-import) if your build tooling supports it. If not make sure the components have been (imported and) defined. The imported component will be passed a `routeProps` object containing the properties that are set in the route.
 
-> As of version 2.3.0 you can have optional path parts`.
+You can define paths as: 
+
+| Type | Syntax | Explanation |
+| ---- | ------ | ----------- |
+| Normal | `/stocks/latest` | This route can only be exactly matched. |
+| Dynamic | `/stocks/:type` | This route contains the variable *type*, the value will be provided as routeProps to the given component. |
+| Optional | `/stocks/:type/:?period` | The route contains both a variable *type* and *period*. |
+| Wildcard | `*` | This is a fallback pattern if no routes are matched. |
 
 **app.js**
 ```javascript
@@ -70,20 +77,24 @@ const globalProp = "version-1.2.3";
 class App extends Router(LitElement) {
     static get routes() {
         return [
+            // Root path
             {
                 path: "/",
                 component: "page-home"
             },
+            // Using 'type' and 'day' variable.
             {
                 path: "/stock/:type/:day",
                 component: "page-stocks",
                 import: () => import("./src/page_stock.js")
             },
+            // Using 'stockId' and optionally 'againstRate' variable.
             {
                 path: "/trade/:stockId/:?againstRate",
                 component: "page-trade",
                 import: () => import("./src/page_trade.js")
             },
+            // Using 'category' variable.
             {
                 path: "/news/:category",
                 render: routeProps => html`
@@ -93,6 +104,7 @@ class App extends Router(LitElement) {
                     </page-news>`,
                 import: () => import("./src/page_news.js")
             },
+            // Fallback for all unmatched routes.  
             {
                 path: "*",
                 render: () => html`<h2>404 The requested page could not be found</h2>`
