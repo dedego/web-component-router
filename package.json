@@ -1,6 +1,6 @@
 {
   "name": "simple-wc-router",
-  "version": "2.3.2",
+  "version": "2.3.3",
   "description": "`Simple Web Component Router",
   "main": "dist/index.js",
   "module": "dist/index.m.js",

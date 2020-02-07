@@ -62,7 +62,7 @@ You can define paths as:
 | ---- | ------ | ----------- |
 | Normal | `/stocks/latest` | This route can only be exactly matched. |
 | Dynamic | `/stocks/:type` | This route contains the variable *type*, the value will be provided as routeProps to the given component. |
-| Optional | `/stocks/:type/:?period` | The route contains both a variable *type* and *period*. |
+| Optional | `/stocks/:type/:?period` | The route contains both a variable *type* and *period*. Where *period* is optional. The route will be matched with and without the *period* route part. |
 | Wildcard | `*` | This is a fallback pattern if no routes are matched. |
 
 **app.js**
@@ -204,4 +204,5 @@ Now when you want to use the component, it is as simple as:
 | 2.2.1   | Changed the documentation.                                                       |
 | 2.3.0   | Added optional routing based on the suggestion JaySunSyn                         |
 | 2.3.1   | Fixed NPM audit finding                                                          |
-
+| 2.3.2   | Improved documentation                                                           |
+| 2.3.3   | Improved documentation                                                           |
