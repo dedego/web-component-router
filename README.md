@@ -190,4 +190,5 @@ Now when you want to use the component, it is as simple as:
 | 2.2.0   | Added wildcard posibility.                                                       |
 | 2.2.1   | Changed the documentation.                                                       |
 | 2.3.0   | Added optional routing based on the suggestion JaySunSyn                         |
+| 2.3.1   | Fixed NPM audit finding                                                          |
 
