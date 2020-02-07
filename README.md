@@ -54,9 +54,8 @@ You can make use of [dynamic imports](https://v8.dev/features/dynamic-import) if
 
 Wilcard/Fallback/Default routes can be added as `path: "*"`, which can be used with either `render` or `component` (with or without import).
 
-> As of version 1.2.0 the routes need to be defined as `static get routes()`.
-
 > As of version 2.1.0 a render method is added to the route definitions`.
+> As of version 2.3.0 you can have optional path parts`.
 
 **app.js**
 ```javascript
@@ -78,6 +77,11 @@ class App extends Router(LitElement) {
                 path: "/stock/:type/:day",
                 component: "page-stocks",
                 import: () => import("./src/page_stock.js")
+            },
+            {
+                path: "/trade/:stockId/:?againstRate",
+                component: "page-trade",
+                import: () => import("./src/page_trade.js")
             },
             {
                 path: "/news/:category",
@@ -185,4 +189,5 @@ Now when you want to use the component, it is as simple as:
 | 2.1.0   | Added a render method to the route definition.                                   |
 | 2.2.0   | Added wildcard posibility.                                                       |
 | 2.2.1   | Changed the documentation.                                                       |
+| 2.3.0   | Added optional routing based on the suggestion JaySunSyn                         |
 

@@ -1,34 +1,45 @@
 const split = str => {
-    if (!str.includes("/")) return str;
-    if (str.charAt(0) === "/") return str.substring(1).split("/");
-    return str.split("/");
-}
+  if (!str.includes("/")) return [str];
+  if (str.charAt(0) === "/") return str.substring(1).split("/");
+  return str.split("/");
+};
 
 const matcher = (patterns, targetRoute) => {
   const exactMatch = patterns.find(({ path }) => path === targetRoute);
-  const wildcard = patterns.find(pattern => pattern.path === '*');
   if (exactMatch) return { route: exactMatch, props: null };
+  const wildcard = patterns.find(pattern => pattern.path === "*");
   const targetParts = split(targetRoute);
   const props = {};
   const route = patterns.find(({ path }) => {
     const patternParts = split(path);
-    if( (patternParts.length !== targetParts.length) || patternParts[0].includes(":") ) return false;
-    const matches = [];    
-    patternParts.forEach((part, i) => {
-        if (patternParts[i] && patternParts[i].includes(":")) {
-            props[patternParts[i].replace(":", "")] = targetParts[i];
-            matches.push(true);
-        } else {
-            matches.push(part === targetParts[i]);
-        }
+    if (!Array.isArray(patternParts)) return false;
+    const requiredLength = patternParts.filter(part => !part.includes(':?')).length;
+    
+    if (
+      patternParts[0].includes(":") || 
+      targetParts.length < requiredLength || 
+      targetParts.length > patternParts.length
+    ) {
+      return false;
+    }
+
+    return patternParts.every((part, i) => {
+      if (patternParts[i].includes(":?")) {
+        props[patternParts[i].replace(":?", "")] = targetParts[i];
+        return true;
+      }
+      if (patternParts[i].includes(":")) {
+        props[patternParts[i].replace(":", "")] = targetParts[i];
+        return true;
+      }
+      return part === targetParts[i];
     });
-    return matches.every(match => match === true);
   });
 
-  if(!route && wildcard) return { route: wildcard };
-  if(!route && !wildcard) return null;
+  if (!route && wildcard) return { route: wildcard };
+  if (!route && !wildcard) return null;
   return { route, props };
 };
 
 export default matcher;
-export { matcher };
+export { matcher, split };

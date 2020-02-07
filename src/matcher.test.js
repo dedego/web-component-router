@@ -1,4 +1,4 @@
-import { matcher } from './matcher';
+import { matcher, split} from './matcher';
 
 let patterns;
 describe("Matcher evaluation", () => {
@@ -9,6 +9,7 @@ describe("Matcher evaluation", () => {
         { path: '/info/foo/search', id: 2 },
         { path: '/:some/:properties', id: 3 },
         { path: '/other/:properties', id: 4 },
+        { path: '/optional/:?name/:?job', id: 5 },
         { path: '*', id: 99 }
     ];
   });
@@ -31,4 +32,33 @@ describe("Matcher evaluation", () => {
     // This is dynamically matched
     expect(matcher(patterns, '/info/bar/search').route.id).toBe(1);
   })
+
+  test("Wildcard", () => {
+    expect(matcher(patterns, '/somethingelse').route.id).toBe(99);
+  });
+
+  test("Null when no wildcard is specified", () => {
+    const patternNoWildcard = patterns.filter(pattern => pattern.path !== '*');
+    expect(matcher(patternNoWildcard, 'nowildcard')).toBeNull();
+  });
+
+  test("Optional path", () => {
+    expect(matcher(patterns, '/optional').route.id).toBe(5);
+    expect(matcher(patterns, '/optional/dennis').route.id).toBe(5);
+    expect(matcher(patterns, '/optional/dennis/developer').route.id).toBe(5);
+  });
+});
+
+let defaulPattern = "foo/bar/foo";
+let alternateSyntax = "foo%2Fbar%2Ffoo";
+let startWithSlash = "/foo/bar"
+describe("Split function", () => {
+  test("Positive split", () => {
+    expect(split(defaulPattern)).toHaveLength(3);
+    expect(split(startWithSlash)).toHaveLength(2);
+  });
+
+  test("No split", () => {
+    expect(split(alternateSyntax)).toHaveLength(1);
+  });
 });

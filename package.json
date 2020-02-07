@@ -1,13 +1,14 @@
 {
   "name": "simple-wc-router",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "description": "`Simple Web Component Router",
   "main": "dist/index.js",
   "module": "dist/index.m.js",
   "scripts": {
     "build": "rollup -c",
     "prepublishOnly": "npm run build",
-    "test": "jest",
+    "test": "jest --coverage",
+    "test:watch": "jest --watchAll",
     "example": "es-dev-server --watch --node-resolve --open --app-index index.html"
   },
   "repository": "github:dedego/web-component-router",
