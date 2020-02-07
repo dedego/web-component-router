@@ -7,14 +7,14 @@ module.exports = {
     {
       file: pkg["main"],
       format: "umd",
-      sourcemap: true,
+      sourcemap: false,
       exports: "named",
       name: "wcr"
     },
     {
       file: pkg["module"],
       format: "esm",
-      sourcemap: true,
+      sourcemap: false,
       exports: "named",
       name: "wcr"
     }

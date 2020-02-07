@@ -1,6 +1,6 @@
 {
   "name": "simple-wc-router",
-  "version": "2.3.3",
+  "version": "2.3.4",
   "description": "`Simple Web Component Router",
   "main": "dist/index.js",
   "module": "dist/index.m.js",
@@ -11,6 +11,11 @@
     "test:watch": "jest --watchAll",
     "example": "es-dev-server --watch --node-resolve --open --app-index index.html"
   },
+  "files": [
+    "dist/index.js",
+    "dist/index.m.js",
+    "README.md"
+  ],
   "repository": "github:dedego/web-component-router",
   "keywords": [
     "web components",

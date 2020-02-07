@@ -206,3 +206,4 @@ Now when you want to use the component, it is as simple as:
 | 2.3.1   | Fixed NPM audit finding                                                          |
 | 2.3.2   | Improved documentation                                                           |
 | 2.3.3   | Improved documentation                                                           |
+| 2.3.4   | Improved build size                                                              |
