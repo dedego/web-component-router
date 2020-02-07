@@ -55,6 +55,7 @@ You can make use of [dynamic imports](https://v8.dev/features/dynamic-import) if
 Wilcard/Fallback/Default routes can be added as `path: "*"`, which can be used with either `render` or `component` (with or without import).
 
 > As of version 2.1.0 a render method is added to the route definitions`.
+
 > As of version 2.3.0 you can have optional path parts`.
 
 **app.js**
