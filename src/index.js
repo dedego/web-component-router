@@ -1,52 +1,50 @@
-import { matcher } from './matcher';
+import { matcher } from "./matcher.js";
+import {
+  CreateElement,
+  PushState,
+  ReplaceState,
+  AddEvent,
+  RemoveEvent,
+  DispatchEvent,
+  isFunction,
+  startLocation,
+} from "./helpers.js";
+import { Errors } from "./constants.js";
 
-const DCE = document.createElement.bind(document);
-const HPS = history.pushState.bind(history);
-const HRS = history.replaceState.bind(history);
-const WRE = window.removeEventListener.bind(window);
-const WDE = window.dispatchEvent.bind(window);
-const WAE = window.addEventListener.bind(window);
-
-const Errors = {
-  Router: {
-    NoRoutes: "Router :: No routes were defined!"
-  },
-  RouteMixin: {
-    NoRoute:
-      "RouteMixin :: `navigate` method requires the ### component to have a route property/attribute"
-  }
-};
-
-const startLocation = () => window.location.pathname || "/";
-
-const Router = superClass =>
+const Router = (superClass) =>
   class extends superClass {
     static get properties() {
       return {
-        routes: Array,
         route: String,
         routeProps: Object,
         routeElement: String,
-        lastRoute: String
+        __lastRoute: String,
       };
     }
+
     constructor() {
       super();
       const route = startLocation();
       this.routeProps = {};
       this.lastRoute = null;
-      HRS({ route }, null, route);
+      ReplaceState({ route }, null, route);
     }
+
     connectedCallback() {
       super.connectedCallback();
-      WAE("popstate", this.__handleNav.bind(this));
-      WDE(new PopStateEvent("popstate", { state: { route: startLocation() } }));
+      this.__boundFindMatchingRoute = this.__findMatchingRoute.bind(this);
+      AddEvent("popstate", this.__boundFindMatchingRoute);
+      DispatchEvent(
+        new PopStateEvent("popstate", { state: { route: startLocation() } })
+      );
     }
+
     disconnectedCallback() {
       super.disconnectedCallback();
-      WRE("popstate", this.__handleNav.bind(this));
+      RemoveEvent("popstate", this.__boundFindMatchingRoute);
     }
-    __handleNav(ev) {
+
+    __findMatchingRoute(ev) {
       if (!this.constructor.routes) throw Errors.Router.NoRoutes;
       const targetRoute = ev.state.route;
       const match = matcher(this.constructor.routes, targetRoute);
@@ -54,28 +52,30 @@ const Router = superClass =>
         this.route = match.route;
         this.routeProps = match.props;
       }
-      if (this.lastRoute !== targetRoute) {
-        this.setRouteElement();
-        this.lastRoute = targetRoute;
+      if (this.__lastRoute !== targetRoute) {
+        this.__setRouteElement();
+        this.__lastRoute = targetRoute;
       }
     }
-    setRouteElement() {
+
+    __setRouteElement() {
       const setElement = () => {
         let element;
-        if( typeof this.route.render === "function" ) {
+        if (isFunction(this.route.render)) {
           element = this.route.render(this.routeProps);
         } else {
-          element = DCE(this.route.component);
+          element = CreateElement(this.route.component);
           Object.assign(element, this.routeProps);
         }
-        
+
         this.routeElement = element;
       };
+
       if (!this.route) {
         this.routeElement = null;
       } else if (
         !customElements.get(this.route.component) &&
-        typeof this.route.import === "function"
+        isFunction(this.route.import)
       ) {
         this.route.import().then(setElement);
       } else {
@@ -84,38 +84,30 @@ const Router = superClass =>
     }
   };
 
-const RouteMixin = superClass =>
-  class extends superClass {
-    static get properties() {
-      return {
-        isRouteActive: Boolean
-      };
-    }
-    connectedCallback() {
-      super.connectedCallback();
-      this.isRouteActive = this.route === window.location.pathname;
-      WAE("popstate", this.__handleActive.bind(this));
-    }
-    disconnectedCallback() {
-      super.disconnectedCallback();
-      WRE("popstate", this.__handleActive.bind(this));
-    }
-    __handleActive(ev) {
-      this.isRouteActive = ev.state.route === this.route;
-    }
-    navigate( customRoute ) {
-      const route = customRoute ? customRoute : this.route;
-      if (!route) throw Errors.RouteMixin.NoRoute.replace('###', this.nodeName);
-      if (route === window.location.pathname) return;
-      if (route.substring(0, 1) !== '/') {
-        window.location.href = route;
-        return;
-      }
+const RouteManager = () => {
+  console.log(`
+    RouteManager:
+    =============
 
-      const state = { route };
-      HPS(state, null, route);
-      WDE(new PopStateEvent("popstate", { state }));
+    - RouteManager.navigate 
+    - RouteManager.getBase
+  `);
+  return this;
+};
+Object.assign(RouteManager, {
+  navigate: (route) => {
+    if (!route) throw Errors.RouteManager.NoRoute;
+    if (route === window.location.pathname) return;
+    if (route.substring(0, 1) !== "/") {
+      window.location.href = route;
+      return;
     }
-  };
 
-export { Router, RouteMixin };
+    const state = { route };
+    PushState(state, null, route);
+    DispatchEvent(new PopStateEvent("popstate", { state }));
+  },
+  getBase: () => document.baseURI,
+});
+
+export { Router, RouteManager };

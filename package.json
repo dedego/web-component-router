@@ -1,20 +1,15 @@
 {
   "name": "simple-wc-router",
-  "version": "2.3.4",
+  "version": "3.0.0",
   "description": "`Simple Web Component Router",
   "main": "dist/index.js",
-  "module": "dist/index.m.js",
   "scripts": {
-    "build": "rollup -c",
-    "prepublishOnly": "npm run build",
-    "test": "jest --coverage",
-    "test:watch": "jest --watchAll",
-    "example": "es-dev-server --watch --node-resolve --open --app-index index.html"
+    "test": "node ./src/tests.js"
   },
   "files": [
-    "dist/index.js",
-    "dist/index.m.js",
-    "README.md"
+    "src/index.js",
+    "README.md",
+    "simple-wc-router.png"
   ],
   "repository": "github:dedego/web-component-router",
   "keywords": [
@@ -26,27 +21,5 @@
   "bugs": {
     "url": "https://github.com/dedego/web-component-router/issues"
   },
-  "homepage": "https://github.com/dedego/web-component-router#readme",
-  "devDependencies": {
-    "@babel/core": "^7.8.4",
-    "@babel/preset-env": "^7.8.4",
-    "babel-jest": "^24.9.0",
-    "es-dev-server": "^1.38.3",
-    "jest": "^24.9.0",
-    "lit-element": "^2.2.1",
-    "rollup": "^1.31.0",
-    "rollup-plugin-terser": "^5.2.0"
-  },
-  "browserslist": [
-    "defaults"
-  ],
-  "jest": {
-    "verbose": true,
-    "transform": {
-      "^.+\\.js$": "babel-jest"
-    },
-    "transformIgnorePatterns": [
-      "<rootDir>/node_modules/"
-    ]
-  }
+  "homepage": "https://github.com/dedego/web-component-router#readme"
 }

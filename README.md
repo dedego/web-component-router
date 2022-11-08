@@ -1,4 +1,4 @@
-# Simple Web Component Router
+# Simple Web Component Router 3.0.0
 ![alt text](simple-wc-router.png "Simple <Web Component /> Router")
 
 This is a *simple web component router* that hooks into both the history API and the web components API. You can use this to setup routing for your web components application.

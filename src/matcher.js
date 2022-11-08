@@ -4,7 +4,7 @@ const split = str => {
   return str.split("/");
 };
 
-const matcher = (patterns, targetRoute) => {
+const matcher = (patterns = [], targetRoute = '') => {
   const exactMatch = patterns.find(({ path }) => path === targetRoute);
   if (exactMatch) return { route: exactMatch, props: null };
   const wildcard = patterns.find(pattern => pattern.path === "*");
@@ -41,5 +41,4 @@ const matcher = (patterns, targetRoute) => {
   return { route, props };
 };
 
-export default matcher;
 export { matcher, split };
